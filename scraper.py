@@ -3,7 +3,7 @@
 # Creator Name:     Janib Soomro
 # Creator Email:    Soomrojb@gmail.com
 # Creation Date:    22nd April 2016
-# Last Modified:    22nd April 2016
+# Last Modified:    1st July 2016
 
 # Imports Section
 from BeautifulSoup import BeautifulSoup
@@ -42,10 +42,13 @@ def FetchQuotes(Soup):
 def GetLastPage(Soup):
     LastPg = 0
     for AllAlphas in Soup.findAll('a', href=re.compile(r'/authors/.+')):
+        # print AllAlphas
         if AllAlphas.text == 'Next':
-            PreviousLnk = AllAlphas.findPrevious('a')
-            PrvLnk = re.findall(r'(\d+).html', str(PreviousLnk))
+            # print AllAlphas.findPrevious('a').get('href')
+            PreviousLnk = AllAlphas.findPrevious('a').get('href')
+            PrvLnk = re.findall(r'(\d+)', str(PreviousLnk))
             LastPg = PrvLnk[0]
+            # print LastPg
             break
     return LastPg
 
@@ -56,7 +59,7 @@ for AllAlphabets in re.findall(r'href=.(/authors/\w).+>([A-Z])<', HtmlContent):
     NewPgSource = Bwr.open(NewLink).read()
     Soup = BeautifulSoup(NewPgSource)
     LastPg = GetLastPage(Soup)
-    # print 'Total Page = %s' %LastPg
+    print 'Total Page = %s' %LastPg
     for AllAuthors in Soup.findAll('a', href=re.compile(r'/quotes/authors/')):
         if AllAuthors.get('class') == None:
             # if AllAuthors.text == 'Jurgen Habermas':
